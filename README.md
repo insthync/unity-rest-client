@@ -1,2 +1,2 @@
 # unity-rest-client
-A simple rest client for Unity
+A simple REST client for Unity
