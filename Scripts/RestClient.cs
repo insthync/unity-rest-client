@@ -19,26 +19,27 @@ namespace UnityRestClient
         public static int GetLoadCount { get; private set; }
         public static int LoadCount { get { return PostLoadCount + PatchLoadCount + PutLoadCount + DeleteLoadCount + GetLoadCount; } }
 
-        public static string GetQueryString(KeyValuePair<string, object>[] queries)
+        public static string GetQueryString(Dictionary<string, object> queries)
         {
             StringBuilder queryStringBuilder = new StringBuilder();
-            for (int i = 0; i < queries.Length; ++i)
+            int i = 0;
+            foreach (var query in queries)
             {
-                if (string.IsNullOrEmpty(queries[i].Key) || queries[i].Value == null)
+                if (string.IsNullOrEmpty(query.Key) || query.Value == null)
                     continue;
                 if (i == 0)
                     queryStringBuilder.Append('?');
                 else
                     queryStringBuilder.Append('&');
-                if (queries[i].Value.GetType().IsArray ||
-                    queries[i].Value.GetType().IsAssignableFrom(typeof(IList)))
+                if (query.Value.GetType().IsArray ||
+                    query.Value.GetType().IsAssignableFrom(typeof(IList)))
                 {
                     int j = 0;
-                    foreach (object value in queries[i].Value as IEnumerable)
+                    foreach (object value in query.Value as IEnumerable)
                     {
                         if (j > 0)
                             queryStringBuilder.Append('&');
-                        queryStringBuilder.Append(queries[i].Key);
+                        queryStringBuilder.Append(query.Key);
                         queryStringBuilder.Append("=");
                         queryStringBuilder.Append(value);
                         ++j;
@@ -46,31 +47,32 @@ namespace UnityRestClient
                 }
                 else
                 {
-                    queryStringBuilder.Append(queries[i].Key);
+                    queryStringBuilder.Append(query.Key);
                     queryStringBuilder.Append('=');
-                    queryStringBuilder.Append(queries[i].Value);
+                    queryStringBuilder.Append(query.Value);
                 }
+                ++i;
             }
             return queryStringBuilder.ToString();
         }
 
-        public static async Task<Result<TResponse>> Get<TResponse>(string url, params KeyValuePair<string, object>[] queries)
+        public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries)
         {
-            return await Get<TResponse>(url, string.Empty, queries);
+            return await Get<TResponse>(url, queries, string.Empty);
         }
 
-        public static async Task<Result<TResponse>> Get<TResponse>(string url, string authorizationToken, params KeyValuePair<string, object>[] queries)
+        public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
         {
             Result result = await Get(url + GetQueryString(queries), authorizationToken);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
-        public static async Task<Result<TResponse>> Delete<TResponse>(string url, params KeyValuePair<string, object>[] queries)
+        public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries)
         {
-            return await Delete<TResponse>(url, string.Empty, queries);
+            return await Delete<TResponse>(url, queries, string.Empty);
         }
 
-        public static async Task<Result<TResponse>> Delete<TResponse>(string url, string authorizationToken, params KeyValuePair<string, object>[] queries)
+        public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
         {
             Result result = await Delete(url + GetQueryString(queries), authorizationToken);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
