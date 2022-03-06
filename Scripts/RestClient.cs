@@ -56,6 +56,11 @@ namespace UnityRestClient
             return queryStringBuilder.ToString();
         }
 
+        public static async Task<Result<TResponse>> Get<TResponse>(string url)
+        {
+            return await Get<TResponse>(url, new Dictionary<string, object>(), string.Empty);
+        }
+
         public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries)
         {
             return await Get<TResponse>(url, queries, string.Empty);
@@ -65,6 +70,11 @@ namespace UnityRestClient
         {
             Result result = await Get(url + GetQueryString(queries), authorizationToken);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
+        }
+
+        public static async Task<Result<TResponse>> Delete<TResponse>(string url)
+        {
+            return await Delete<TResponse>(url, new Dictionary<string, object>(), string.Empty);
         }
 
         public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries)
