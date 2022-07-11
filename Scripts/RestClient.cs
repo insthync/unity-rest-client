@@ -71,6 +71,12 @@ namespace UnityRestClient
             return await Get<TResponse>(url, new Dictionary<string, object>(), authorizationToken);
         }
 
+        public static async Task<Result<TResponse>> Get<TResponse>(string url, string authorizationToken, bool return_data)
+        {
+            Result result = await Get(url, authorizationToken);
+            return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
+        }
+
         public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
         {
             Result result = await Get(url + GetQueryString(queries), authorizationToken);
