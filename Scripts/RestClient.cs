@@ -569,7 +569,6 @@ namespace UnityRestClient
                 apiUrl = apiUrl.Substring(0, apiUrl.Length - 1);
             if (action.StartsWith("/"))
                 action = action.Substring(1);
-            //Debug.Log("Get URL " + $"{apiUrl}/{action}");
             return $"{apiUrl}/{action}";
         }
 
