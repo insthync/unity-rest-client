@@ -71,6 +71,12 @@ namespace UnityRestClient
             return await Get<TResponse>(url, new Dictionary<string, object>(), authorizationToken);
         }
 
+        public static async Task<Result<TResponse>> Get<TResponse>(string url, string authorizationToken, bool return_data)
+        {
+            Result result = await Get(url, authorizationToken);
+            return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
+        }
+
         public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
         {
             Result result = await Get(url + GetQueryString(queries), authorizationToken);
@@ -563,6 +569,7 @@ namespace UnityRestClient
                 apiUrl = apiUrl.Substring(0, apiUrl.Length - 1);
             if (action.StartsWith("/"))
                 action = action.Substring(1);
+            //Debug.Log("Get URL " + $"{apiUrl}/{action}");
             return $"{apiUrl}/{action}";
         }
 
@@ -673,6 +680,7 @@ namespace UnityRestClient
                 IsNetworkError = isNetworkError;
                 Error = error;
                 Content = default;
+                Debug.Log(stringContent);
                 if (!IsHttpError && !IsNetworkError)
                 {
                     try
