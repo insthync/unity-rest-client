@@ -161,7 +161,7 @@ namespace UnityRestClient
 
         public static async Task<Result> Get(string url, string authorizationToken)
         {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
             Guid id = Guid.NewGuid();
             bool errorLogged = false;
             Debug.Log($"Get request {id} {url}");
@@ -179,7 +179,7 @@ namespace UnityRestClient
                 webRequest.certificateHandler = new SimpleWebRequestCert();
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.Log($"Get {id} with authorization token {authorizationToken}");
 #endif
                     webRequest.SetRequestHeader("Content-Type", "application/json");
@@ -196,7 +196,7 @@ namespace UnityRestClient
                 }
                 catch (Exception ex)
                 {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.LogError($"Get error {id} catched {ex}");
                     errorLogged = true;
 #else
@@ -215,7 +215,7 @@ namespace UnityRestClient
                     stringContent = webRequest.downloadHandler.text;
                 else
                     error = webRequest.error;
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Get error {id} {stringContent}");
                 else
@@ -230,7 +230,7 @@ namespace UnityRestClient
 
         public static async Task<Result> Delete(string url, string authorizationToken)
         {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
             Guid id = Guid.NewGuid();
             bool errorLogged = false;
             Debug.Log($"Delete request {id} {url}");
@@ -248,7 +248,7 @@ namespace UnityRestClient
                 webRequest.certificateHandler = new SimpleWebRequestCert();
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.Log($"Delete {id} with authorization token {authorizationToken}");
 #endif
                     webRequest.SetRequestHeader("Content-Type", "application/json");
@@ -265,7 +265,7 @@ namespace UnityRestClient
                 }
                 catch (Exception ex)
                 {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.LogError($"Delete error {id} catched {ex}");
                     errorLogged = true;
 #else
@@ -284,7 +284,7 @@ namespace UnityRestClient
                     stringContent = webRequest.downloadHandler.text;
                 else
                     error = webRequest.error;
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Delete error {id} {stringContent}");
                 else
@@ -309,7 +309,7 @@ namespace UnityRestClient
 
         public static async Task<Result> Post(string url, string data, string authorizationToken)
         {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
             Guid id = Guid.NewGuid();
             bool errorLogged = false;
             Debug.Log($"Post request {id} {url} {data}");
@@ -327,7 +327,7 @@ namespace UnityRestClient
                 webRequest.certificateHandler = new SimpleWebRequestCert();
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.Log($"Post {id} with authorization token {authorizationToken}");
 #endif
                     webRequest.SetRequestHeader("Content-Type", "application/json");
@@ -346,7 +346,7 @@ namespace UnityRestClient
                 }
                 catch (Exception ex)
                 {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.LogError($"Post error {id} catched {ex}");
                     errorLogged = true;
 #else
@@ -365,7 +365,7 @@ namespace UnityRestClient
                     stringContent = webRequest.downloadHandler.text;
                 else
                     error = webRequest.error;
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Post error {id} {stringContent}");
                 else
@@ -390,7 +390,7 @@ namespace UnityRestClient
 
         public static async Task<Result> Patch(string url, string data, string authorizationToken)
         {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
             Guid id = Guid.NewGuid();
             bool errorLogged = false;
             Debug.Log($"Patch request {id} {url} {data}");
@@ -408,7 +408,7 @@ namespace UnityRestClient
                 webRequest.certificateHandler = new SimpleWebRequestCert();
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.Log($"Patch {id} with authorization token {authorizationToken}");
 #endif
                     webRequest.SetRequestHeader("Content-Type", "application/json");
@@ -427,7 +427,7 @@ namespace UnityRestClient
                 }
                 catch (Exception ex)
                 {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.LogError($"Patch error {id} catched {ex}");
                     errorLogged = true;
 #else
@@ -446,7 +446,7 @@ namespace UnityRestClient
                     stringContent = webRequest.downloadHandler.text;
                 else
                     error = webRequest.error;
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Patch error {id} {stringContent}");
                 else
@@ -471,7 +471,7 @@ namespace UnityRestClient
 
         public static async Task<Result> Put(string url, string data, string authorizationToken)
         {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
             Guid id = Guid.NewGuid();
             bool errorLogged = false;
             Debug.Log($"Put request {id} {url} {data}");
@@ -489,7 +489,7 @@ namespace UnityRestClient
                 webRequest.certificateHandler = new SimpleWebRequestCert();
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.Log($"Put {id} with authorization token {authorizationToken}");
 #endif
                     webRequest.SetRequestHeader("Content-Type", "application/json");
@@ -508,7 +508,7 @@ namespace UnityRestClient
                 }
                 catch (Exception ex)
                 {
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.LogError($"Put error {id} catched {ex}");
                     errorLogged = true;
 #else
@@ -527,7 +527,7 @@ namespace UnityRestClient
                     stringContent = webRequest.downloadHandler.text;
                 else
                     error = webRequest.error;
-#if DEBUG_REST_CLIENT
+#if DEBUG_REST_CLIENT || UNITY_EDITOR
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Put error {id} {stringContent}");
                 else
@@ -682,7 +682,7 @@ namespace UnityRestClient
                     catch (Exception ex)
                     {
                         // It may not able to deserialize
-                        Debug.LogError($"Can't deserialize content: {ex}");
+                        Debug.LogError($"Can't deserialize content: {stringContent}, {ex}");
                     }
                 }
                 if (IsHttpError && string.IsNullOrEmpty(Error))
