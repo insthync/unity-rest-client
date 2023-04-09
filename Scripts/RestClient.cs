@@ -690,4 +690,12 @@ namespace UnityRestClient
             }
         }
     }
+
+    public static class RestClientResultExtensions
+    {
+        public static bool IsError(this RestClient.IResult result)
+        {
+            return result.IsHttpError || result.IsNetworkError;
+        }
+    }
 }
