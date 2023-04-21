@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,11 @@ namespace UnityRestClient
         public static int DeleteLoadCount { get; private set; }
         public static int GetLoadCount { get; private set; }
         public static int LoadCount { get { return PostLoadCount + PatchLoadCount + PutLoadCount + DeleteLoadCount + GetLoadCount; } }
+        public static JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings()
+        {
+            ContractResolver = new DefaultContractResolver(),
+            NullValueHandling = NullValueHandling.Ignore,
+        };
 
         public static string GetQueryString(Dictionary<string, object> queries)
         {
@@ -299,12 +305,12 @@ namespace UnityRestClient
 
         public static async Task<Result> Post<TForm>(string url, TForm data)
         {
-            return await Post(url, JsonConvert.SerializeObject(data), null);
+            return await Post(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), null);
         }
 
         public static async Task<Result> Post<TForm>(string url, TForm data, string authorizationToken)
         {
-            return await Post(url, JsonConvert.SerializeObject(data), authorizationToken);
+            return await Post(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken);
         }
 
         public static async Task<Result> Post(string url, string data, string authorizationToken)
@@ -380,12 +386,12 @@ namespace UnityRestClient
 
         public static async Task<Result> Patch<TForm>(string url, TForm data)
         {
-            return await Patch(url, JsonConvert.SerializeObject(data), null);
+            return await Patch(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), null);
         }
 
         public static async Task<Result> Patch<TForm>(string url, TForm data, string authorizationToken)
         {
-            return await Patch(url, JsonConvert.SerializeObject(data), authorizationToken);
+            return await Patch(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken);
         }
 
         public static async Task<Result> Patch(string url, string data, string authorizationToken)
@@ -461,12 +467,12 @@ namespace UnityRestClient
 
         public static async Task<Result> Put<TForm>(string url, TForm data)
         {
-            return await Put(url, JsonConvert.SerializeObject(data), null);
+            return await Put(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), null);
         }
 
         public static async Task<Result> Put<TForm>(string url, TForm data, string authorizationToken)
         {
-            return await Put(url, JsonConvert.SerializeObject(data), authorizationToken);
+            return await Put(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken);
         }
 
         public static async Task<Result> Put(string url, string data, string authorizationToken)
@@ -677,7 +683,7 @@ namespace UnityRestClient
                 {
                     try
                     {
-                        Content = JsonConvert.DeserializeObject<T>(stringContent);
+                        Content = JsonConvert.DeserializeObject<T>(stringContent, JsonSerializerSettings);
                     }
                     catch (Exception ex)
                     {
