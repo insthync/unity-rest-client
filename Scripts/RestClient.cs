@@ -183,12 +183,12 @@ namespace UnityRestClient
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbGET))
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
+                webRequest.SetRequestHeader("Content-Type", "application/json");
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.Log($"Get {id} with authorization token {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader("Content-Type", "application/json");
                     webRequest.SetRequestHeader("Authorization", "Bearer " + authorizationToken);
                 }
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
@@ -211,8 +211,8 @@ namespace UnityRestClient
                 }
                 responseCode = webRequest.responseCode;
 #if UNITY_2020_2_OR_NEWER
-                isHttpError = (webRequest.result == UnityWebRequest.Result.ProtocolError);
-                isNetworkError = (webRequest.result == UnityWebRequest.Result.ConnectionError);
+                isHttpError = webRequest.result == UnityWebRequest.Result.ProtocolError;
+                isNetworkError = webRequest.result == UnityWebRequest.Result.ConnectionError;
 #else
                 isHttpError = webRequest.isHttpError;
                 isNetworkError = webRequest.isNetworkError;
@@ -225,7 +225,7 @@ namespace UnityRestClient
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Get error {id} {stringContent}");
                 else
-                    Debug.Log($"Get success {id} {webRequest.responseCode} {stringContent}");
+                    Debug.Log($"Get success {id} {responseCode} {stringContent}");
 #endif
             }
             if (!doNotCountNextRequest)
@@ -252,12 +252,12 @@ namespace UnityRestClient
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbDELETE))
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
+                webRequest.SetRequestHeader("Content-Type", "application/json");
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.Log($"Delete {id} with authorization token {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader("Content-Type", "application/json");
                     webRequest.SetRequestHeader("Authorization", "Bearer " + authorizationToken);
                 }
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
@@ -280,8 +280,8 @@ namespace UnityRestClient
                 }
                 responseCode = webRequest.responseCode;
 #if UNITY_2020_2_OR_NEWER
-                isHttpError = (webRequest.result == UnityWebRequest.Result.ProtocolError);
-                isNetworkError = (webRequest.result == UnityWebRequest.Result.ConnectionError);
+                isHttpError = webRequest.result == UnityWebRequest.Result.ProtocolError;
+                isNetworkError = webRequest.result == UnityWebRequest.Result.ConnectionError;
 #else
                 isHttpError = webRequest.isHttpError;
                 isNetworkError = webRequest.isNetworkError;
@@ -294,7 +294,7 @@ namespace UnityRestClient
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Delete error {id} {stringContent}");
                 else
-                    Debug.Log($"Delete success {id} {webRequest.responseCode} {stringContent}");
+                    Debug.Log($"Delete success {id} {responseCode} {stringContent}");
 #endif
             }
             if (!doNotCountNextRequest)
@@ -331,12 +331,12 @@ namespace UnityRestClient
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST))
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
+                webRequest.SetRequestHeader("Content-Type", "application/json");
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.Log($"Post {id} with authorization token {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader("Content-Type", "application/json");
                     webRequest.SetRequestHeader("Authorization", "Bearer " + authorizationToken);
                 }
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data.ToCharArray()));
@@ -361,8 +361,8 @@ namespace UnityRestClient
                 }
                 responseCode = webRequest.responseCode;
 #if UNITY_2020_2_OR_NEWER
-                isHttpError = (webRequest.result == UnityWebRequest.Result.ProtocolError);
-                isNetworkError = (webRequest.result == UnityWebRequest.Result.ConnectionError);
+                isHttpError = webRequest.result == UnityWebRequest.Result.ProtocolError;
+                isNetworkError = webRequest.result == UnityWebRequest.Result.ConnectionError;
 #else
                 isHttpError = webRequest.isHttpError;
                 isNetworkError = webRequest.isNetworkError;
@@ -375,7 +375,7 @@ namespace UnityRestClient
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Post error {id} {stringContent}");
                 else
-                    Debug.Log($"Post success {id} {webRequest.responseCode} {stringContent}");
+                    Debug.Log($"Post success {id} {responseCode} {stringContent}");
 #endif
             }
             if (!doNotCountNextRequest)
@@ -412,12 +412,12 @@ namespace UnityRestClient
             using (UnityWebRequest webRequest = new UnityWebRequest(url, "PATCH"))
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
+                webRequest.SetRequestHeader("Content-Type", "application/json");
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.Log($"Patch {id} with authorization token {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader("Content-Type", "application/json");
                     webRequest.SetRequestHeader("Authorization", "Bearer " + authorizationToken);
                 }
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data.ToCharArray()));
@@ -442,8 +442,8 @@ namespace UnityRestClient
                 }
                 responseCode = webRequest.responseCode;
 #if UNITY_2020_2_OR_NEWER
-                isHttpError = (webRequest.result == UnityWebRequest.Result.ProtocolError);
-                isNetworkError = (webRequest.result == UnityWebRequest.Result.ConnectionError);
+                isHttpError = webRequest.result == UnityWebRequest.Result.ProtocolError;
+                isNetworkError = webRequest.result == UnityWebRequest.Result.ConnectionError;
 #else
                 isHttpError = webRequest.isHttpError;
                 isNetworkError = webRequest.isNetworkError;
@@ -456,7 +456,7 @@ namespace UnityRestClient
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Patch error {id} {stringContent}");
                 else
-                    Debug.Log($"Patch success {id} {webRequest.responseCode} {stringContent}");
+                    Debug.Log($"Patch success {id} {responseCode} {stringContent}");
 #endif
             }
             if (!doNotCountNextRequest)
@@ -493,12 +493,12 @@ namespace UnityRestClient
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPUT))
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
+                webRequest.SetRequestHeader("Content-Type", "application/json");
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEBUG_REST_CLIENT || UNITY_EDITOR
                     Debug.Log($"Put {id} with authorization token {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader("Content-Type", "application/json");
                     webRequest.SetRequestHeader("Authorization", "Bearer " + authorizationToken);
                 }
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data.ToCharArray()));
@@ -523,8 +523,8 @@ namespace UnityRestClient
                 }
                 responseCode = webRequest.responseCode;
 #if UNITY_2020_2_OR_NEWER
-                isHttpError = (webRequest.result == UnityWebRequest.Result.ProtocolError);
-                isNetworkError = (webRequest.result == UnityWebRequest.Result.ConnectionError);
+                isHttpError = webRequest.result == UnityWebRequest.Result.ProtocolError;
+                isNetworkError = webRequest.result == UnityWebRequest.Result.ConnectionError;
 #else
                 isHttpError = webRequest.isHttpError;
                 isNetworkError = webRequest.isNetworkError;
@@ -537,7 +537,7 @@ namespace UnityRestClient
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Put error {id} {stringContent}");
                 else
-                    Debug.Log($"Put success {id} {webRequest.responseCode} {stringContent}");
+                    Debug.Log($"Put success {id} {responseCode} {stringContent}");
 #endif
             }
             if (!doNotCountNextRequest)
