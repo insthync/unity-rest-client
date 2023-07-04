@@ -679,7 +679,7 @@ namespace UnityRestClient
                 IsNetworkError = isNetworkError;
                 Error = error;
                 Content = default;
-                if (!IsHttpError && !IsNetworkError)
+                if (!IsNetworkError)
                 {
                     try
                     {
