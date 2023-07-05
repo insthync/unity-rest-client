@@ -93,6 +93,11 @@ namespace UnityRestClient
             return await Delete<TResponse>(url, queries, string.Empty);
         }
 
+        public static async Task<Result<TResponse>> Delete<TResponse>(string url, string authorizationToken)
+        {
+            return await Delete<TResponse>(url, new Dictionary<string, object>(), authorizationToken);
+        }
+
         public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
         {
             Result result = await Delete(url + GetQueryString(queries), authorizationToken);
