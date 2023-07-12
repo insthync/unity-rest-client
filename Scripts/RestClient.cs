@@ -170,6 +170,11 @@ namespace UnityRestClient
             return await Put(url, "{}", authorizationToken);
         }
 
+        public static async Task<Result> Get(string url)
+        {
+            return await Get(url, null);
+        }
+
         public static async Task<Result> Get(string url, string authorizationToken)
         {
 #if DEBUG_REST_CLIENT || UNITY_EDITOR
@@ -237,6 +242,11 @@ namespace UnityRestClient
                 GetLoadCount--;
             DoNotCountNextRequest = false;
             return new Result(responseCode, isHttpError, isNetworkError, stringContent, error);
+        }
+
+        public static async Task<Result> Delete(string url)
+        {
+            return await Delete(url, null);
         }
 
         public static async Task<Result> Delete(string url, string authorizationToken)
