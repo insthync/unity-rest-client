@@ -19,11 +19,22 @@ namespace UnityRestClient
         public static int DeleteLoadCount { get; private set; }
         public static int GetLoadCount { get; private set; }
         public static int LoadCount { get { return PostLoadCount + PatchLoadCount + PutLoadCount + DeleteLoadCount + GetLoadCount; } }
+
         public static JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings()
         {
             ContractResolver = new DefaultContractResolver(),
             NullValueHandling = NullValueHandling.Ignore,
         };
+
+        private static uint s_debugIdCounter = uint.MinValue;
+
+        private static uint GetNextDebugId()
+        {
+            if (s_debugIdCounter == uint.MaxValue)
+                s_debugIdCounter = uint.MinValue;
+            s_debugIdCounter = s_debugIdCounter + 1;
+            return s_debugIdCounter;
+        }
 
         public static string GetQueryString(Dictionary<string, object> queries)
         {
@@ -178,7 +189,7 @@ namespace UnityRestClient
         public static async Task<Result> Get(string url, string authorizationToken)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            Guid id = Guid.NewGuid();
+            uint id = GetNextDebugId();
             bool errorLogged = false;
             Debug.Log($"Get request {id} {url}");
 #endif
@@ -252,7 +263,7 @@ namespace UnityRestClient
         public static async Task<Result> Delete(string url, string authorizationToken)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            Guid id = Guid.NewGuid();
+            uint id = GetNextDebugId();
             bool errorLogged = false;
             Debug.Log($"Delete request {id} {url}");
 #endif
@@ -331,7 +342,7 @@ namespace UnityRestClient
         public static async Task<Result> Post(string url, string data, string authorizationToken)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            Guid id = Guid.NewGuid();
+            uint id = GetNextDebugId();
             bool errorLogged = false;
             Debug.Log($"Post request {id} {url} {data}");
 #endif
@@ -412,7 +423,7 @@ namespace UnityRestClient
         public static async Task<Result> Patch(string url, string data, string authorizationToken)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            Guid id = Guid.NewGuid();
+            uint id = GetNextDebugId();
             bool errorLogged = false;
             Debug.Log($"Patch request {id} {url} {data}");
 #endif
@@ -493,7 +504,7 @@ namespace UnityRestClient
         public static async Task<Result> Put(string url, string data, string authorizationToken)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            Guid id = Guid.NewGuid();
+            uint id = GetNextDebugId();
             bool errorLogged = false;
             Debug.Log($"Put request {id} {url} {data}");
 #endif
