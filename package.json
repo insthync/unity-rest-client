@@ -10,6 +10,6 @@
         "url": "https://github.com/insthync"
     },
     "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "2.0"
+        "com.unity.nuget.newtonsoft-json": "2.0.0"
     }
 }
