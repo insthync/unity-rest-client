@@ -90,7 +90,7 @@ namespace UnityRestClient
 
         public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
         {
-            Result result = await Get(url + GetQueryString(queries), authorizationToken);
+            Result result = await Get(url, queries, authorizationToken);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
@@ -111,7 +111,7 @@ namespace UnityRestClient
 
         public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
         {
-            Result result = await Delete(url + GetQueryString(queries), authorizationToken);
+            Result result = await Delete(url, queries, authorizationToken);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
@@ -183,7 +183,17 @@ namespace UnityRestClient
 
         public static async Task<Result> Get(string url)
         {
-            return await Get(url, null);
+            return await Get(url, string.Empty);
+        }
+
+        public static async Task<Result> Get(string url, Dictionary<string, object> queries)
+        {
+            return await Get(url, queries, string.Empty);
+        }
+
+        public static async Task<Result> Get(string url, Dictionary<string, object> queries, string authorizationToken)
+        {
+            return await Get(url + GetQueryString(queries), authorizationToken);
         }
 
         public static async Task<Result> Get(string url, string authorizationToken)
@@ -257,7 +267,17 @@ namespace UnityRestClient
 
         public static async Task<Result> Delete(string url)
         {
-            return await Delete(url, null);
+            return await Delete(url, string.Empty);
+        }
+
+        public static async Task<Result> Delete(string url, Dictionary<string, object> queries)
+        {
+            return await Delete(url, queries, string.Empty);
+        }
+
+        public static async Task<Result> Delete(string url, Dictionary<string, object> queries, string authorizationToken)
+        {
+            return await Delete(url + GetQueryString(queries), authorizationToken);
         }
 
         public static async Task<Result> Delete(string url, string authorizationToken)
@@ -331,7 +351,7 @@ namespace UnityRestClient
 
         public static async Task<Result> Post<TForm>(string url, TForm data)
         {
-            return await Post(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), null);
+            return await Post(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
         }
 
         public static async Task<Result> Post<TForm>(string url, TForm data, string authorizationToken)
@@ -412,7 +432,7 @@ namespace UnityRestClient
 
         public static async Task<Result> Patch<TForm>(string url, TForm data)
         {
-            return await Patch(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), null);
+            return await Patch(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
         }
 
         public static async Task<Result> Patch<TForm>(string url, TForm data, string authorizationToken)
@@ -493,7 +513,7 @@ namespace UnityRestClient
 
         public static async Task<Result> Put<TForm>(string url, TForm data)
         {
-            return await Put(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), null);
+            return await Put(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
         }
 
         public static async Task<Result> Put<TForm>(string url, TForm data, string authorizationToken)
