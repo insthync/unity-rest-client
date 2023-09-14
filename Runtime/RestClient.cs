@@ -20,6 +20,7 @@ namespace UnityRestClient
         public static int GetLoadCount { get; private set; }
         public static int LoadCount { get { return PostLoadCount + PatchLoadCount + PutLoadCount + DeleteLoadCount + GetLoadCount; } }
 
+        public static readonly string JsonContentType = "application/json";
         public static JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings()
         {
             ContractResolver = new DefaultContractResolver(),
@@ -214,7 +215,6 @@ namespace UnityRestClient
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbGET))
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
-                webRequest.SetRequestHeader("Content-Type", "application/json");
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
@@ -298,7 +298,6 @@ namespace UnityRestClient
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbDELETE))
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
-                webRequest.SetRequestHeader("Content-Type", "application/json");
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
@@ -351,15 +350,15 @@ namespace UnityRestClient
 
         public static async Task<Result> Post<TForm>(string url, TForm data)
         {
-            return await Post(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
+            return await Post(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
         }
 
         public static async Task<Result> Post<TForm>(string url, TForm data, string authorizationToken)
         {
-            return await Post(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken);
+            return await Post(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken);
         }
 
-        public static async Task<Result> Post(string url, string data, string authorizationToken)
+        public static async Task<Result> Post(string url, string contentType, string data, string authorizationToken)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
@@ -377,7 +376,6 @@ namespace UnityRestClient
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPOST))
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
-                webRequest.SetRequestHeader("Content-Type", "application/json");
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
@@ -386,7 +384,7 @@ namespace UnityRestClient
                     webRequest.SetRequestHeader("Authorization", "Bearer " + authorizationToken);
                 }
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data.ToCharArray()));
-                webRequest.uploadHandler.contentType = "application/json";
+                webRequest.uploadHandler.contentType = contentType;
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 try
                 {
@@ -432,15 +430,15 @@ namespace UnityRestClient
 
         public static async Task<Result> Patch<TForm>(string url, TForm data)
         {
-            return await Patch(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
+            return await Patch(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
         }
 
         public static async Task<Result> Patch<TForm>(string url, TForm data, string authorizationToken)
         {
-            return await Patch(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken);
+            return await Patch(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken);
         }
 
-        public static async Task<Result> Patch(string url, string data, string authorizationToken)
+        public static async Task<Result> Patch(string url, string contentType, string data, string authorizationToken)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
@@ -458,7 +456,6 @@ namespace UnityRestClient
             using (UnityWebRequest webRequest = new UnityWebRequest(url, "PATCH"))
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
-                webRequest.SetRequestHeader("Content-Type", "application/json");
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
@@ -467,7 +464,7 @@ namespace UnityRestClient
                     webRequest.SetRequestHeader("Authorization", "Bearer " + authorizationToken);
                 }
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data.ToCharArray()));
-                webRequest.uploadHandler.contentType = "application/json";
+                webRequest.uploadHandler.contentType = contentType;
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 try
                 {
@@ -513,15 +510,15 @@ namespace UnityRestClient
 
         public static async Task<Result> Put<TForm>(string url, TForm data)
         {
-            return await Put(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
+            return await Put(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
         }
 
         public static async Task<Result> Put<TForm>(string url, TForm data, string authorizationToken)
         {
-            return await Put(url, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken);
+            return await Put(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken);
         }
 
-        public static async Task<Result> Put(string url, string data, string authorizationToken)
+        public static async Task<Result> Put(string url, string contentType, string data, string authorizationToken)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
@@ -539,7 +536,6 @@ namespace UnityRestClient
             using (UnityWebRequest webRequest = new UnityWebRequest(url, UnityWebRequest.kHttpVerbPUT))
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
-                webRequest.SetRequestHeader("Content-Type", "application/json");
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
@@ -548,7 +544,7 @@ namespace UnityRestClient
                     webRequest.SetRequestHeader("Authorization", "Bearer " + authorizationToken);
                 }
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data.ToCharArray()));
-                webRequest.uploadHandler.contentType = "application/json";
+                webRequest.uploadHandler.contentType = contentType;
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 try
                 {
