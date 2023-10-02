@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections;
@@ -21,11 +22,39 @@ namespace UnityRestClient
         public static int LoadCount { get { return PostLoadCount + PatchLoadCount + PutLoadCount + DeleteLoadCount + GetLoadCount; } }
 
         public static readonly string JsonContentType = "application/json";
-        public static JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings()
+        private static JsonSerializerSettings s_jsonSerializerSettings = null;
+        public static JsonSerializerSettings JsonSerializerSettings
         {
-            ContractResolver = new DefaultContractResolver(),
-            NullValueHandling = NullValueHandling.Ignore,
-        };
+            get
+            {
+                if (s_jsonSerializerSettings == null)
+                {
+                    List<JsonConverter> converters = new List<JsonConverter>();
+                    if (JsonConvert.DefaultSettings != null)
+                    {
+                        JsonSerializerSettings settings = JsonConvert.DefaultSettings.Invoke();
+                        for (int i = 0; i < settings.Converters.Count; ++i)
+                        {
+                            if (settings.Converters[i] is StringEnumConverter)
+                                continue;
+                            converters.Add(settings.Converters[i]);
+                        }
+                    }
+                    converters.Add(new IntEnumConverter());
+                    s_jsonSerializerSettings = new JsonSerializerSettings()
+                    {
+                        ContractResolver = new DefaultContractResolver(),
+                        Converters = converters.ToArray(),
+                        NullValueHandling = NullValueHandling.Ignore,
+                    };
+                }
+                return s_jsonSerializerSettings;
+            }
+            set
+            {
+                s_jsonSerializerSettings = value;
+            }
+        }
 
         private static uint s_debugIdCounter = uint.MinValue;
 
