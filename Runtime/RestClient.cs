@@ -675,6 +675,30 @@ namespace UnityRestClient
             }
         }
 
+        public static string GetNetworkErrorMessage(IResult result)
+        {
+            if (result.IsNetworkError)
+                return "Network Error";
+            try
+            {
+                Dictionary<string, object> objs = JsonConvert.DeserializeObject<Dictionary<string, object>>(result.StringContent, JsonSerializerSettings);
+                object tempObject;
+                if (objs.TryGetValue("error", out tempObject))
+                    return tempObject.ToString();
+                if (objs.TryGetValue("Error", out tempObject))
+                    return tempObject.ToString();
+                if (objs.TryGetValue("message", out tempObject))
+                    return tempObject.ToString();
+                if (objs.TryGetValue("Message", out tempObject))
+                    return tempObject.ToString();
+            }
+            catch
+            {
+                return GetNetworkErrorMessage(result.ResponseCode);
+            }
+            return "Unknow Error";
+        }
+
         public interface IResult
         {
             long ResponseCode { get; }
@@ -700,7 +724,7 @@ namespace UnityRestClient
                 StringContent = stringContent;
                 Error = error;
                 if (IsHttpError && string.IsNullOrEmpty(Error))
-                    Error = GetNetworkErrorMessage(responseCode);
+                    Error = GetNetworkErrorMessage(this);
             }
         }
 
@@ -734,7 +758,7 @@ namespace UnityRestClient
                     }
                 }
                 if (IsHttpError && string.IsNullOrEmpty(Error))
-                    Error = GetNetworkErrorMessage(responseCode);
+                    Error = GetNetworkErrorMessage(this);
             }
         }
     }
