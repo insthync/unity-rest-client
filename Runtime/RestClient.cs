@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections;
@@ -26,6 +26,47 @@ namespace UnityRestClient
             ContractResolver = new DefaultContractResolver(),
             NullValueHandling = NullValueHandling.Ignore,
         };
+
+        public struct AuthHeaderSettings
+        {
+            public string Header { get; set; }
+            public string Prefix { get; set; }
+        }
+
+        public static readonly AuthHeaderSettings BearerAuthHeaderSettings = new AuthHeaderSettings()
+        {
+            Header = "Authorization",
+            Prefix = "Bearer ",
+        };
+
+        public static readonly AuthHeaderSettings ApiKeyAuthHeaderSettings = new AuthHeaderSettings()
+        {
+            Header = "x-api-key",
+            Prefix = "",
+        };
+
+        public struct RequestContent
+        {
+            public string Type { get; set; }
+            public string Data { get; set; }
+        }
+
+        public static RequestContent GetJsonContent(object data)
+        {
+            if (data == null)
+            {
+                return new RequestContent()
+                {
+                    Type = JsonContentType,
+                    Data = "{}",
+                };
+            }
+            return new RequestContent()
+            {
+                Type = JsonContentType,
+                Data = JsonConvert.SerializeObject(data, JsonSerializerSettings),
+            };
+        }
 
         private static uint s_debugIdCounter = uint.MinValue;
 
@@ -84,14 +125,14 @@ namespace UnityRestClient
             return await Get<TResponse>(url, queries, string.Empty);
         }
 
-        public static async Task<Result<TResponse>> Get<TResponse>(string url, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result<TResponse>> Get<TResponse>(string url, string authorizationToken)
         {
-            return await Get<TResponse>(url, new Dictionary<string, object>(), authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            return await Get<TResponse>(url, new Dictionary<string, object>(), authorizationToken);
         }
 
-        public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
         {
-            Result result = await Get(url, queries, authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            Result result = await Get(url, queries, authorizationToken);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
@@ -105,14 +146,14 @@ namespace UnityRestClient
             return await Delete<TResponse>(url, queries, string.Empty);
         }
 
-        public static async Task<Result<TResponse>> Delete<TResponse>(string url, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result<TResponse>> Delete<TResponse>(string url, string authorizationToken)
         {
-            return await Delete<TResponse>(url, new Dictionary<string, object>(), authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            return await Delete<TResponse>(url, new Dictionary<string, object>(), authorizationToken);
         }
 
-        public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
         {
-            Result result = await Delete(url, queries, authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            Result result = await Delete(url, queries, authorizationToken);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
@@ -121,21 +162,21 @@ namespace UnityRestClient
             return await Post<TForm, TResponse>(url, data, string.Empty);
         }
 
-        public static async Task<Result<TResponse>> Post<TForm, TResponse>(string url, TForm data, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result<TResponse>> Post<TForm, TResponse>(string url, TForm data, string authorizationToken)
         {
-            Result result = await Post(url, data, authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            Result result = await Post(url, data, authorizationToken);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
-        public static async Task<Result<TResponse>> Post<TResponse>(string url, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result<TResponse>> Post<TResponse>(string url, string authorizationToken)
         {
-            Result result = await Post(url, "{}", authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            Result result = await Post(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
-        public static async Task<Result> Post(string url, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Post(string url, string authorizationToken)
         {
-            return await Post(url, "{}", authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            return await Post(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
         }
 
         public static async Task<Result<TResponse>> Patch<TForm, TResponse>(string url, TForm data)
@@ -143,21 +184,21 @@ namespace UnityRestClient
             return await Patch<TForm, TResponse>(url, data, string.Empty);
         }
 
-        public static async Task<Result<TResponse>> Patch<TForm, TResponse>(string url, TForm data, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result<TResponse>> Patch<TForm, TResponse>(string url, TForm data, string authorizationToken)
         {
             Result result = await Patch(url, data, authorizationToken);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
-        public static async Task<Result<TResponse>> Patch<TResponse>(string url, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result<TResponse>> Patch<TResponse>(string url, string authorizationToken)
         {
-            Result result = await Patch(url, "{}", authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            Result result = await Patch(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
-        public static async Task<Result> Patch(string url, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Patch(string url, string authorizationToken)
         {
-            return await Patch(url, "{}", authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            return await Patch(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
         }
 
         public static async Task<Result<TResponse>> Put<TForm, TResponse>(string url, TForm data)
@@ -165,26 +206,26 @@ namespace UnityRestClient
             return await Put<TForm, TResponse>(url, data, string.Empty);
         }
 
-        public static async Task<Result<TResponse>> Put<TForm, TResponse>(string url, TForm data, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result<TResponse>> Put<TForm, TResponse>(string url, TForm data, string authorizationToken)
         {
             Result result = await Put(url, data, authorizationToken);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
-        public static async Task<Result<TResponse>> Put<TResponse>(string url, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result<TResponse>> Put<TResponse>(string url, string authorizationToken)
         {
-            Result result = await Put(url, "{}", authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            Result result = await Put(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
-        public static async Task<Result> Put(string url, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Put(string url, string authorizationToken)
         {
-            return await Put(url, "{}", authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            return await Put(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
         }
 
         public static async Task<Result> Get(string url)
         {
-            return await Get(url, string.Empty);
+            return await Get(url, string.Empty, BearerAuthHeaderSettings);
         }
 
         public static async Task<Result> Get(string url, Dictionary<string, object> queries)
@@ -192,12 +233,12 @@ namespace UnityRestClient
             return await Get(url, queries, string.Empty);
         }
 
-        public static async Task<Result> Get(string url, Dictionary<string, object> queries, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Get(string url, Dictionary<string, object> queries, string authorizationToken)
         {
-            return await Get(url + GetQueryString(queries), authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            return await Get(url + GetQueryString(queries), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Get(string url, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Get(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
@@ -220,7 +261,7 @@ namespace UnityRestClient
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
                     Debug.Log($"Get {id} with authorization token {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader(authorizationHeader, authorizationTokenPrefix + authorizationToken);
+                    webRequest.SetRequestHeader(authHeaderSettings.Header, authHeaderSettings.Prefix + authorizationToken);
                 }
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 try
@@ -267,7 +308,7 @@ namespace UnityRestClient
 
         public static async Task<Result> Delete(string url)
         {
-            return await Delete(url, string.Empty);
+            return await Delete(url, string.Empty, BearerAuthHeaderSettings);
         }
 
         public static async Task<Result> Delete(string url, Dictionary<string, object> queries)
@@ -275,12 +316,12 @@ namespace UnityRestClient
             return await Delete(url, queries, string.Empty);
         }
 
-        public static async Task<Result> Delete(string url, Dictionary<string, object> queries, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Delete(string url, Dictionary<string, object> queries, string authorizationToken)
         {
-            return await Delete(url + GetQueryString(queries), authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            return await Delete(url + GetQueryString(queries), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Delete(string url, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Delete(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
@@ -303,7 +344,7 @@ namespace UnityRestClient
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
                     Debug.Log($"Delete {id} with authorization token {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader(authorizationHeader, authorizationTokenPrefix + authorizationToken);
+                    webRequest.SetRequestHeader(authHeaderSettings.Header, authHeaderSettings.Prefix + authorizationToken);
                 }
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 try
@@ -350,20 +391,20 @@ namespace UnityRestClient
 
         public static async Task<Result> Post<TForm>(string url, TForm data)
         {
-            return await Post(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
+            return await Post(url, GetJsonContent(data), string.Empty, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Post<TForm>(string url, TForm data, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Post<TForm>(string url, TForm data, string authorizationToken)
         {
-            return await Post(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            return await Post(url, GetJsonContent(data), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Post(string url, string contentType, string data, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Post(string url, RequestContent content, string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
             bool errorLogged = false;
-            Debug.Log($"Post request {id} {url} {data}");
+            Debug.Log($"Post request {id} {url} {content.Data}");
 #endif
             bool doNotCountNextRequest = DoNotCountNextRequest;
             long responseCode = -1;
@@ -381,10 +422,10 @@ namespace UnityRestClient
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
                     Debug.Log($"Post {id} with authorization token {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader(authorizationHeader, authorizationTokenPrefix + authorizationToken);
+                    webRequest.SetRequestHeader(authHeaderSettings.Header, authHeaderSettings.Prefix + authorizationToken);
                 }
-                webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data.ToCharArray()));
-                webRequest.uploadHandler.contentType = contentType;
+                webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(content.Data.ToCharArray()));
+                webRequest.uploadHandler.contentType = content.Type;
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 try
                 {
@@ -430,20 +471,20 @@ namespace UnityRestClient
 
         public static async Task<Result> Patch<TForm>(string url, TForm data)
         {
-            return await Patch(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
+            return await Patch(url, GetJsonContent(data), string.Empty, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Patch<TForm>(string url, TForm data, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Patch<TForm>(string url, TForm data, string authorizationToken)
         {
-            return await Patch(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            return await Patch(url, GetJsonContent(data), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Patch(string url, string contentType, string data, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Patch(string url, RequestContent content, string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
             bool errorLogged = false;
-            Debug.Log($"Patch request {id} {url} {data}");
+            Debug.Log($"Patch request {id} {url} {content.Data}");
 #endif
             bool doNotCountNextRequest = DoNotCountNextRequest;
             long responseCode = -1;
@@ -461,10 +502,10 @@ namespace UnityRestClient
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
                     Debug.Log($"Patch {id} with authorization token {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader(authorizationHeader, authorizationTokenPrefix + authorizationToken);
+                    webRequest.SetRequestHeader(authHeaderSettings.Header, authHeaderSettings.Prefix + authorizationToken);
                 }
-                webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data.ToCharArray()));
-                webRequest.uploadHandler.contentType = contentType;
+                webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(content.Data.ToCharArray()));
+                webRequest.uploadHandler.contentType = content.Type;
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 try
                 {
@@ -510,20 +551,20 @@ namespace UnityRestClient
 
         public static async Task<Result> Put<TForm>(string url, TForm data)
         {
-            return await Put(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), string.Empty);
+            return await Put(url, GetJsonContent(data), string.Empty, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Put<TForm>(string url, TForm data, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Put<TForm>(string url, TForm data, string authorizationToken)
         {
-            return await Put(url, JsonContentType, JsonConvert.SerializeObject(data, JsonSerializerSettings), authorizationToken, authorizationHeader, authorizationTokenPrefix);
+            return await Put(url, GetJsonContent(data), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Put(string url, string contentType, string data, string authorizationToken, string authorizationHeader = "Authorization", string authorizationTokenPrefix = "Bearer ")
+        public static async Task<Result> Put(string url, RequestContent content, string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
             bool errorLogged = false;
-            Debug.Log($"Put request {id} {url} {data}");
+            Debug.Log($"Put request {id} {url} {content.Data}");
 #endif
             bool doNotCountNextRequest = DoNotCountNextRequest;
             long responseCode = -1;
@@ -541,10 +582,10 @@ namespace UnityRestClient
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
                     Debug.Log($"Put {id} with authorization token {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader(authorizationHeader, authorizationTokenPrefix + authorizationToken);
+                    webRequest.SetRequestHeader(authHeaderSettings.Header, authHeaderSettings.Prefix + authorizationToken);
                 }
-                webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(data.ToCharArray()));
-                webRequest.uploadHandler.contentType = contentType;
+                webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(content.Data.ToCharArray()));
+                webRequest.uploadHandler.contentType = content.Type;
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 try
                 {
