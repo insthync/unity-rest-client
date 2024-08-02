@@ -130,9 +130,20 @@ namespace UnityRestClient
             return await Get<TResponse>(url, new Dictionary<string, object>(), authorizationToken);
         }
 
+        public static async Task<Result<TResponse>> Get<TResponse>(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            return await Get<TResponse>(url, new Dictionary<string, object>(), authorizationToken, authHeaderSettings);
+        }
+
         public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
         {
             Result result = await Get(url, queries, authorizationToken);
+            return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
+        }
+
+        public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            Result result = await Get(url, queries, authorizationToken, authHeaderSettings);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
@@ -151,9 +162,20 @@ namespace UnityRestClient
             return await Delete<TResponse>(url, new Dictionary<string, object>(), authorizationToken);
         }
 
+        public static async Task<Result<TResponse>> Delete<TResponse>(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            return await Delete<TResponse>(url, new Dictionary<string, object>(), authorizationToken, authHeaderSettings);
+        }
+
         public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
         {
             Result result = await Delete(url, queries, authorizationToken);
+            return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
+        }
+
+        public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            Result result = await Delete(url, queries, authorizationToken, authHeaderSettings);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
@@ -168,15 +190,32 @@ namespace UnityRestClient
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
+        public static async Task<Result<TResponse>> Post<TForm, TResponse>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            Result result = await Post(url, data, authorizationToken, authHeaderSettings);
+            return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
+        }
+
         public static async Task<Result<TResponse>> Post<TResponse>(string url, string authorizationToken)
         {
             Result result = await Post(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
+        public static async Task<Result<TResponse>> Post<TResponse>(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            Result result = await Post(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
+            return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
+        }
+
         public static async Task<Result> Post(string url, string authorizationToken)
         {
             return await Post(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
+        }
+
+        public static async Task<Result> Post(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            return await Post(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
         }
 
         public static async Task<Result<TResponse>> Patch<TForm, TResponse>(string url, TForm data)
@@ -190,15 +229,32 @@ namespace UnityRestClient
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
+        public static async Task<Result<TResponse>> Patch<TForm, TResponse>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            Result result = await Patch(url, data, authorizationToken, authHeaderSettings);
+            return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
+        }
+
         public static async Task<Result<TResponse>> Patch<TResponse>(string url, string authorizationToken)
         {
             Result result = await Patch(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
+        public static async Task<Result<TResponse>> Patch<TResponse>(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            Result result = await Patch(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
+            return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
+        }
+
         public static async Task<Result> Patch(string url, string authorizationToken)
         {
             return await Patch(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
+        }
+
+        public static async Task<Result> Patch(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            return await Patch(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
         }
 
         public static async Task<Result<TResponse>> Put<TForm, TResponse>(string url, TForm data)
@@ -212,15 +268,32 @@ namespace UnityRestClient
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
+        public static async Task<Result<TResponse>> Put<TForm, TResponse>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            Result result = await Put(url, data, authorizationToken, authHeaderSettings);
+            return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
+        }
+
         public static async Task<Result<TResponse>> Put<TResponse>(string url, string authorizationToken)
         {
             Result result = await Put(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
             return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
         }
 
+        public static async Task<Result<TResponse>> Put<TResponse>(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            Result result = await Put(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
+            return new Result<TResponse>(result.ResponseCode, result.IsHttpError, result.IsNetworkError, result.StringContent, result.Error);
+        }
+
         public static async Task<Result> Put(string url, string authorizationToken)
         {
             return await Put(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
+        }
+
+        public static async Task<Result> Put(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            return await Put(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
         }
 
         public static async Task<Result> Get(string url)
@@ -236,6 +309,11 @@ namespace UnityRestClient
         public static async Task<Result> Get(string url, Dictionary<string, object> queries, string authorizationToken)
         {
             return await Get(url + GetQueryString(queries), authorizationToken, BearerAuthHeaderSettings);
+        }
+
+        public static async Task<Result> Get(string url, Dictionary<string, object> queries, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            return await Get(url + GetQueryString(queries), authorizationToken, authHeaderSettings);
         }
 
         public static async Task<Result> Get(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
@@ -321,6 +399,11 @@ namespace UnityRestClient
             return await Delete(url + GetQueryString(queries), authorizationToken, BearerAuthHeaderSettings);
         }
 
+        public static async Task<Result> Delete(string url, Dictionary<string, object> queries, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            return await Delete(url + GetQueryString(queries), authorizationToken, authHeaderSettings);
+        }
+
         public static async Task<Result> Delete(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
@@ -397,6 +480,11 @@ namespace UnityRestClient
         public static async Task<Result> Post<TForm>(string url, TForm data, string authorizationToken)
         {
             return await Post(url, GetJsonContent(data), authorizationToken, BearerAuthHeaderSettings);
+        }
+
+        public static async Task<Result> Post<TForm>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            return await Post(url, GetJsonContent(data), authorizationToken, authHeaderSettings);
         }
 
         public static async Task<Result> Post(string url, RequestContent content, string authorizationToken, AuthHeaderSettings authHeaderSettings)
@@ -479,6 +567,11 @@ namespace UnityRestClient
             return await Patch(url, GetJsonContent(data), authorizationToken, BearerAuthHeaderSettings);
         }
 
+        public static async Task<Result> Patch<TForm>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            return await Patch(url, GetJsonContent(data), authorizationToken, authHeaderSettings);
+        }
+
         public static async Task<Result> Patch(string url, RequestContent content, string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
@@ -557,6 +650,11 @@ namespace UnityRestClient
         public static async Task<Result> Put<TForm>(string url, TForm data, string authorizationToken)
         {
             return await Put(url, GetJsonContent(data), authorizationToken, BearerAuthHeaderSettings);
+        }
+
+        public static async Task<Result> Put<TForm>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        {
+            return await Put(url, GetJsonContent(data), authorizationToken, authHeaderSettings);
         }
 
         public static async Task<Result> Put(string url, RequestContent content, string authorizationToken, AuthHeaderSettings authHeaderSettings)
