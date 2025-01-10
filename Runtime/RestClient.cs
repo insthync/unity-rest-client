@@ -18,9 +18,14 @@ namespace UnityRestClient
         public static int PutLoadCount { get; private set; }
         public static int DeleteLoadCount { get; private set; }
         public static int GetLoadCount { get; private set; }
-        public static int LoadCount { get { return PostLoadCount + PatchLoadCount + PutLoadCount + DeleteLoadCount + GetLoadCount; } }
+
+        public static int LoadCount
+        {
+            get { return PostLoadCount + PatchLoadCount + PutLoadCount + DeleteLoadCount + GetLoadCount; }
+        }
 
         public static readonly string JsonContentType = "application/json";
+
         public static JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings()
         {
             ContractResolver = new DefaultContractResolver(),
@@ -53,7 +58,18 @@ namespace UnityRestClient
 
         public static void SetUserAgent(UnityWebRequest webRequest)
         {
-            webRequest.SetRequestHeader("User-Agent", $"{Application.identifier}/{Application.version} (Unity {Application.unityVersion}; {Application.platform})");
+            webRequest.SetRequestHeader("User-Agent",
+                $"{Application.identifier}/{Application.version} (Unity {Application.unityVersion}; {Application.platform})");
+        }
+
+        public static void SetHeaders(UnityWebRequest webRequest, Dictionary<string, string> headers)
+        {
+            if (headers == null || headers.Count == 0)
+                return;
+            foreach (var header in headers)
+            {
+                webRequest.SetRequestHeader(header.Key, header.Value);
+            }
         }
 
         public static RequestContent GetJsonContent(object data)
@@ -66,6 +82,7 @@ namespace UnityRestClient
                     Data = "{}",
                 };
             }
+
             return new RequestContent()
             {
                 Type = JsonContentType,
@@ -115,8 +132,10 @@ namespace UnityRestClient
                     queryStringBuilder.Append('=');
                     queryStringBuilder.Append(query.Value);
                 }
+
                 ++i;
             }
+
             return queryStringBuilder.ToString();
         }
 
@@ -135,18 +154,21 @@ namespace UnityRestClient
             return await Get<TResponse>(url, new Dictionary<string, object>(), authorizationToken);
         }
 
-        public static async Task<Result<TResponse>> Get<TResponse>(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result<TResponse>> Get<TResponse>(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
             return await Get<TResponse>(url, new Dictionary<string, object>(), authorizationToken, authHeaderSettings);
         }
 
-        public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
+        public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries,
+            string authorizationToken)
         {
             Result result = await Get(url, queries, authorizationToken);
             return new Result<TResponse>(result);
         }
 
-        public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result<TResponse>> Get<TResponse>(string url, Dictionary<string, object> queries,
+            string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
             Result result = await Get(url, queries, authorizationToken, authHeaderSettings);
             return new Result<TResponse>(result);
@@ -167,18 +189,22 @@ namespace UnityRestClient
             return await Delete<TResponse>(url, new Dictionary<string, object>(), authorizationToken);
         }
 
-        public static async Task<Result<TResponse>> Delete<TResponse>(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result<TResponse>> Delete<TResponse>(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
-            return await Delete<TResponse>(url, new Dictionary<string, object>(), authorizationToken, authHeaderSettings);
+            return await Delete<TResponse>(url, new Dictionary<string, object>(), authorizationToken,
+                authHeaderSettings);
         }
 
-        public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken)
+        public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries,
+            string authorizationToken)
         {
             Result result = await Delete(url, queries, authorizationToken);
             return new Result<TResponse>(result);
         }
 
-        public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result<TResponse>> Delete<TResponse>(string url, Dictionary<string, object> queries,
+            string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
             Result result = await Delete(url, queries, authorizationToken, authHeaderSettings);
             return new Result<TResponse>(result);
@@ -189,13 +215,15 @@ namespace UnityRestClient
             return await Post<TForm, TResponse>(url, data, string.Empty);
         }
 
-        public static async Task<Result<TResponse>> Post<TForm, TResponse>(string url, TForm data, string authorizationToken)
+        public static async Task<Result<TResponse>> Post<TForm, TResponse>(string url, TForm data,
+            string authorizationToken)
         {
             Result result = await Post(url, data, authorizationToken);
             return new Result<TResponse>(result);
         }
 
-        public static async Task<Result<TResponse>> Post<TForm, TResponse>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result<TResponse>> Post<TForm, TResponse>(string url, TForm data,
+            string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
             Result result = await Post(url, data, authorizationToken, authHeaderSettings);
             return new Result<TResponse>(result);
@@ -207,7 +235,8 @@ namespace UnityRestClient
             return new Result<TResponse>(result);
         }
 
-        public static async Task<Result<TResponse>> Post<TResponse>(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result<TResponse>> Post<TResponse>(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
             Result result = await Post(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
             return new Result<TResponse>(result);
@@ -218,7 +247,8 @@ namespace UnityRestClient
             return await Post(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Post(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Post(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
             return await Post(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
         }
@@ -228,13 +258,15 @@ namespace UnityRestClient
             return await Patch<TForm, TResponse>(url, data, string.Empty);
         }
 
-        public static async Task<Result<TResponse>> Patch<TForm, TResponse>(string url, TForm data, string authorizationToken)
+        public static async Task<Result<TResponse>> Patch<TForm, TResponse>(string url, TForm data,
+            string authorizationToken)
         {
             Result result = await Patch(url, data, authorizationToken);
             return new Result<TResponse>(result);
         }
 
-        public static async Task<Result<TResponse>> Patch<TForm, TResponse>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result<TResponse>> Patch<TForm, TResponse>(string url, TForm data,
+            string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
             Result result = await Patch(url, data, authorizationToken, authHeaderSettings);
             return new Result<TResponse>(result);
@@ -246,7 +278,8 @@ namespace UnityRestClient
             return new Result<TResponse>(result);
         }
 
-        public static async Task<Result<TResponse>> Patch<TResponse>(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result<TResponse>> Patch<TResponse>(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
             Result result = await Patch(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
             return new Result<TResponse>(result);
@@ -257,7 +290,8 @@ namespace UnityRestClient
             return await Patch(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Patch(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Patch(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
             return await Patch(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
         }
@@ -267,13 +301,15 @@ namespace UnityRestClient
             return await Put<TForm, TResponse>(url, data, string.Empty);
         }
 
-        public static async Task<Result<TResponse>> Put<TForm, TResponse>(string url, TForm data, string authorizationToken)
+        public static async Task<Result<TResponse>> Put<TForm, TResponse>(string url, TForm data,
+            string authorizationToken)
         {
             Result result = await Put(url, data, authorizationToken);
             return new Result<TResponse>(result);
         }
 
-        public static async Task<Result<TResponse>> Put<TForm, TResponse>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result<TResponse>> Put<TForm, TResponse>(string url, TForm data,
+            string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
             Result result = await Put(url, data, authorizationToken, authHeaderSettings);
             return new Result<TResponse>(result);
@@ -285,7 +321,8 @@ namespace UnityRestClient
             return new Result<TResponse>(result);
         }
 
-        public static async Task<Result<TResponse>> Put<TResponse>(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result<TResponse>> Put<TResponse>(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
             Result result = await Put(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
             return new Result<TResponse>(result);
@@ -296,7 +333,8 @@ namespace UnityRestClient
             return await Put(url, GetJsonContent(null), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Put(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Put(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
             return await Put(url, GetJsonContent(null), authorizationToken, authHeaderSettings);
         }
@@ -316,12 +354,20 @@ namespace UnityRestClient
             return await Get(url + GetQueryString(queries), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Get(string url, Dictionary<string, object> queries, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Get(string url, Dictionary<string, object> queries, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
             return await Get(url + GetQueryString(queries), authorizationToken, authHeaderSettings);
         }
 
-        public static async Task<Result> Get(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Get(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
+        {
+            return await Get(url, authorizationToken, authHeaderSettings, null);
+        }
+
+        public static async Task<Result> Get(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings, Dictionary<string, string> headers)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
@@ -341,13 +387,17 @@ namespace UnityRestClient
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
                 SetUserAgent(webRequest);
+                SetHeaders(webRequest, headers);
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-                    Debug.Log($"Get {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
+                    Debug.Log(
+                        $"Get {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader(authHeaderSettings.Header, authHeaderSettings.Prefix + authorizationToken);
+                    webRequest.SetRequestHeader(authHeaderSettings.Header,
+                        authHeaderSettings.Prefix + authorizationToken);
                 }
+
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 try
                 {
@@ -366,6 +416,7 @@ namespace UnityRestClient
                     Debug.LogException(ex);
 #endif
                 }
+
                 responseCode = webRequest.responseCode;
 #if UNITY_2020_2_OR_NEWER
                 isHttpError = webRequest.result == UnityWebRequest.Result.ProtocolError;
@@ -385,10 +436,12 @@ namespace UnityRestClient
                     Debug.Log($"Get success {id} {responseCode} {stringContent}");
 #endif
             }
+
             if (!doNotCountNextRequest)
                 GetLoadCount--;
             DoNotCountNextRequest = false;
-            return new Result(url, method, default, authorizationToken, authHeaderSettings, responseCode, isHttpError, isNetworkError, stringContent, error);
+            return new Result(url, method, default, authorizationToken, authHeaderSettings, responseCode, isHttpError,
+                isNetworkError, stringContent, error);
         }
 
         public static async Task<Result> Delete(string url)
@@ -401,17 +454,26 @@ namespace UnityRestClient
             return await Delete(url, queries, string.Empty);
         }
 
-        public static async Task<Result> Delete(string url, Dictionary<string, object> queries, string authorizationToken)
+        public static async Task<Result> Delete(string url, Dictionary<string, object> queries,
+            string authorizationToken)
         {
             return await Delete(url + GetQueryString(queries), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Delete(string url, Dictionary<string, object> queries, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Delete(string url, Dictionary<string, object> queries,
+            string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
             return await Delete(url + GetQueryString(queries), authorizationToken, authHeaderSettings);
         }
 
-        public static async Task<Result> Delete(string url, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Delete(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
+        {
+            return await Delete(url, authorizationToken, authHeaderSettings, null);
+        }
+
+        public static async Task<Result> Delete(string url, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings, Dictionary<string, string> headers)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
@@ -431,13 +493,17 @@ namespace UnityRestClient
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
                 SetUserAgent(webRequest);
+                SetHeaders(webRequest, headers);
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-                    Debug.Log($"Delete {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
+                    Debug.Log(
+                        $"Delete {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader(authHeaderSettings.Header, authHeaderSettings.Prefix + authorizationToken);
+                    webRequest.SetRequestHeader(authHeaderSettings.Header,
+                        authHeaderSettings.Prefix + authorizationToken);
                 }
+
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
                 try
                 {
@@ -456,6 +522,7 @@ namespace UnityRestClient
                     Debug.LogException(ex);
 #endif
                 }
+
                 responseCode = webRequest.responseCode;
 #if UNITY_2020_2_OR_NEWER
                 isHttpError = webRequest.result == UnityWebRequest.Result.ProtocolError;
@@ -475,10 +542,12 @@ namespace UnityRestClient
                     Debug.Log($"Delete success {id} {responseCode} {stringContent}");
 #endif
             }
+
             if (!doNotCountNextRequest)
                 DeleteLoadCount--;
             DoNotCountNextRequest = false;
-            return new Result(url, method, default, authorizationToken, authHeaderSettings, responseCode, isHttpError, isNetworkError, stringContent, error);
+            return new Result(url, method, default, authorizationToken, authHeaderSettings, responseCode, isHttpError,
+                isNetworkError, stringContent, error);
         }
 
         public static async Task<Result> Post<TForm>(string url, TForm data)
@@ -491,12 +560,20 @@ namespace UnityRestClient
             return await Post(url, GetJsonContent(data), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Post<TForm>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Post<TForm>(string url, TForm data, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
             return await Post(url, GetJsonContent(data), authorizationToken, authHeaderSettings);
         }
 
-        public static async Task<Result> Post(string url, RequestContent content, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Post(string url, RequestContent content, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
+        {
+            return await Post(url, content, authorizationToken, authHeaderSettings, null);
+        }
+
+        public static async Task<Result> Post(string url, RequestContent content, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings, Dictionary<string, string> headers)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
@@ -516,13 +593,17 @@ namespace UnityRestClient
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
                 SetUserAgent(webRequest);
+                SetHeaders(webRequest, headers);
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-                    Debug.Log($"Post {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
+                    Debug.Log(
+                        $"Post {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader(authHeaderSettings.Header, authHeaderSettings.Prefix + authorizationToken);
+                    webRequest.SetRequestHeader(authHeaderSettings.Header,
+                        authHeaderSettings.Prefix + authorizationToken);
                 }
+
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(content.Data.ToCharArray()));
                 webRequest.uploadHandler.contentType = content.Type;
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
@@ -543,6 +624,7 @@ namespace UnityRestClient
                     Debug.LogException(ex);
 #endif
                 }
+
                 responseCode = webRequest.responseCode;
 #if UNITY_2020_2_OR_NEWER
                 isHttpError = webRequest.result == UnityWebRequest.Result.ProtocolError;
@@ -562,10 +644,12 @@ namespace UnityRestClient
                     Debug.Log($"Post success {id} {responseCode} {stringContent}");
 #endif
             }
+
             if (!doNotCountNextRequest)
                 PostLoadCount--;
             DoNotCountNextRequest = false;
-            return new Result(url, method, content, authorizationToken, authHeaderSettings, responseCode, isHttpError, isNetworkError, stringContent, error);
+            return new Result(url, method, content, authorizationToken, authHeaderSettings, responseCode, isHttpError,
+                isNetworkError, stringContent, error);
         }
 
         public static async Task<Result> Patch<TForm>(string url, TForm data)
@@ -578,12 +662,20 @@ namespace UnityRestClient
             return await Patch(url, GetJsonContent(data), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Patch<TForm>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Patch<TForm>(string url, TForm data, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
             return await Patch(url, GetJsonContent(data), authorizationToken, authHeaderSettings);
         }
 
-        public static async Task<Result> Patch(string url, RequestContent content, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Patch(string url, RequestContent content, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
+        {
+            return await Patch(url, content, authorizationToken, authHeaderSettings, null);
+        }
+
+        public static async Task<Result> Patch(string url, RequestContent content, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings, Dictionary<string, string> headers)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
@@ -603,13 +695,17 @@ namespace UnityRestClient
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
                 SetUserAgent(webRequest);
+                SetHeaders(webRequest, headers);
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-                    Debug.Log($"Patch {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
+                    Debug.Log(
+                        $"Patch {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader(authHeaderSettings.Header, authHeaderSettings.Prefix + authorizationToken);
+                    webRequest.SetRequestHeader(authHeaderSettings.Header,
+                        authHeaderSettings.Prefix + authorizationToken);
                 }
+
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(content.Data.ToCharArray()));
                 webRequest.uploadHandler.contentType = content.Type;
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
@@ -630,6 +726,7 @@ namespace UnityRestClient
                     Debug.LogException(ex);
 #endif
                 }
+
                 responseCode = webRequest.responseCode;
 #if UNITY_2020_2_OR_NEWER
                 isHttpError = webRequest.result == UnityWebRequest.Result.ProtocolError;
@@ -649,10 +746,12 @@ namespace UnityRestClient
                     Debug.Log($"Patch success {id} {responseCode} {stringContent}");
 #endif
             }
+
             if (!doNotCountNextRequest)
                 PatchLoadCount--;
             DoNotCountNextRequest = false;
-            return new Result(url, method, content, authorizationToken, authHeaderSettings, responseCode, isHttpError, isNetworkError, stringContent, error);
+            return new Result(url, method, content, authorizationToken, authHeaderSettings, responseCode, isHttpError,
+                isNetworkError, stringContent, error);
         }
 
         public static async Task<Result> Put<TForm>(string url, TForm data)
@@ -665,12 +764,20 @@ namespace UnityRestClient
             return await Put(url, GetJsonContent(data), authorizationToken, BearerAuthHeaderSettings);
         }
 
-        public static async Task<Result> Put<TForm>(string url, TForm data, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Put<TForm>(string url, TForm data, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
         {
             return await Put(url, GetJsonContent(data), authorizationToken, authHeaderSettings);
         }
 
-        public static async Task<Result> Put(string url, RequestContent content, string authorizationToken, AuthHeaderSettings authHeaderSettings)
+        public static async Task<Result> Put(string url, RequestContent content, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings)
+        {
+            return await Put(url, content, authorizationToken, authHeaderSettings, null);
+        }
+
+        public static async Task<Result> Put(string url, RequestContent content, string authorizationToken,
+            AuthHeaderSettings authHeaderSettings, Dictionary<string, string> headers)
         {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
             uint id = GetNextDebugId();
@@ -690,13 +797,17 @@ namespace UnityRestClient
             {
                 webRequest.certificateHandler = new SimpleWebRequestCert();
                 SetUserAgent(webRequest);
+                SetHeaders(webRequest, headers);
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-                    Debug.Log($"Put {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
+                    Debug.Log(
+                        $"Put {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
 #endif
-                    webRequest.SetRequestHeader(authHeaderSettings.Header, authHeaderSettings.Prefix + authorizationToken);
+                    webRequest.SetRequestHeader(authHeaderSettings.Header,
+                        authHeaderSettings.Prefix + authorizationToken);
                 }
+
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(content.Data.ToCharArray()));
                 webRequest.uploadHandler.contentType = content.Type;
                 webRequest.downloadHandler = new DownloadHandlerBuffer();
@@ -717,6 +828,7 @@ namespace UnityRestClient
                     Debug.LogException(ex);
 #endif
                 }
+
                 responseCode = webRequest.responseCode;
 #if UNITY_2020_2_OR_NEWER
                 isHttpError = webRequest.result == UnityWebRequest.Result.ProtocolError;
@@ -736,10 +848,12 @@ namespace UnityRestClient
                     Debug.Log($"Put success {id} {responseCode} {stringContent}");
 #endif
             }
+
             if (!doNotCountNextRequest)
                 PutLoadCount--;
             DoNotCountNextRequest = false;
-            return new Result(url, method, content, authorizationToken, authHeaderSettings, responseCode, isHttpError, isNetworkError, stringContent, error);
+            return new Result(url, method, content, authorizationToken, authHeaderSettings, responseCode, isHttpError,
+                isNetworkError, stringContent, error);
         }
 
         public static string GetQueryString(params KeyValuePair<string, string>[] parameters)
@@ -756,6 +870,7 @@ namespace UnityRestClient
                     queryString += "?";
                 queryString += $"{parameters[i].Key}={parameters[i].Value}";
             }
+
             return queryString;
         }
 
@@ -835,7 +950,9 @@ namespace UnityRestClient
                 return "Network Error";
             try
             {
-                Dictionary<string, object> objs = JsonConvert.DeserializeObject<Dictionary<string, object>>(result.StringContent, JsonSerializerSettings);
+                Dictionary<string, object> objs =
+                    JsonConvert.DeserializeObject<Dictionary<string, object>>(result.StringContent,
+                        JsonSerializerSettings);
                 object tempObject;
                 if (objs.TryGetValue("error", out tempObject))
                     return tempObject.ToString();
@@ -850,6 +967,7 @@ namespace UnityRestClient
             {
                 return GetNetworkErrorMessage(result.ResponseCode);
             }
+
             return "Unknow Error";
         }
 
@@ -875,7 +993,9 @@ namespace UnityRestClient
             public string StringContent { get; private set; }
             public string Error { get; private set; }
 
-            public Result(string url, string method, RequestContent requestContent, string authorizationToken, AuthHeaderSettings authHeaderSettings, long responseCode, bool isHttpError, bool isNetworkError, string stringContent, string error)
+            public Result(string url, string method, RequestContent requestContent, string authorizationToken,
+                AuthHeaderSettings authHeaderSettings, long responseCode, bool isHttpError, bool isNetworkError,
+                string stringContent, string error)
             {
                 Url = url;
                 Method = method;
@@ -893,7 +1013,8 @@ namespace UnityRestClient
             }
 
             public Result(Result src) :
-                this(src.Url, src.Method, src.RequestContent, src.AuthorizationToken, src.AuthHeaderSettings, src.ResponseCode, src.IsHttpError, src.IsNetworkError, src.StringContent, src.Error)
+                this(src.Url, src.Method, src.RequestContent, src.AuthorizationToken, src.AuthHeaderSettings,
+                    src.ResponseCode, src.IsHttpError, src.IsNetworkError, src.StringContent, src.Error)
             {
             }
 
@@ -906,13 +1027,17 @@ namespace UnityRestClient
         {
             public T Content { get; private set; }
 
-            public Result(string url, string method, RequestContent requestContent, string authorizationToken, AuthHeaderSettings authHeaderSettings, long responseCode, bool isHttpError, bool isNetworkError, string stringContent, string error) :
-                base(url, method, requestContent, authorizationToken, authHeaderSettings, responseCode, isHttpError, isNetworkError, stringContent, error)
+            public Result(string url, string method, RequestContent requestContent, string authorizationToken,
+                AuthHeaderSettings authHeaderSettings, long responseCode, bool isHttpError, bool isNetworkError,
+                string stringContent, string error) :
+                base(url, method, requestContent, authorizationToken, authHeaderSettings, responseCode, isHttpError,
+                    isNetworkError, stringContent, error)
             {
             }
 
             public Result(Result src) :
-                this(src.Url, src.Method, src.RequestContent, src.AuthorizationToken, src.AuthHeaderSettings, src.ResponseCode, src.IsHttpError, src.IsNetworkError, src.StringContent, src.Error)
+                this(src.Url, src.Method, src.RequestContent, src.AuthorizationToken, src.AuthHeaderSettings,
+                    src.ResponseCode, src.IsHttpError, src.IsNetworkError, src.StringContent, src.Error)
             {
             }
 
@@ -928,7 +1053,8 @@ namespace UnityRestClient
                     catch (Exception ex)
                     {
                         // It may not able to deserialize
-                        Debug.LogError($"Can't deserialize content: {stringContent}, from {Url} ({Method}), content: {RequestContent.Data} ({RequestContent.Type}), {ex}");
+                        Debug.LogError(
+                            $"Can't deserialize content: {stringContent}, from {Url} ({Method}), content: {RequestContent.Data} ({RequestContent.Type}), {ex}");
                     }
                 }
             }
