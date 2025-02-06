@@ -369,7 +369,7 @@ namespace UnityRestClient
         public static async Task<Result> Get(string url, string authorizationToken,
             AuthHeaderSettings authHeaderSettings, Dictionary<string, string> headers)
         {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
             uint id = GetNextDebugId();
             bool errorLogged = false;
             Debug.Log($"Get request {id} {url}");
@@ -390,7 +390,7 @@ namespace UnityRestClient
                 SetHeaders(webRequest, headers);
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                     Debug.Log(
                         $"Get {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
 #endif
@@ -409,7 +409,7 @@ namespace UnityRestClient
                 }
                 catch (Exception ex)
                 {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                     Debug.LogError($"Get error {id} catched {ex}");
                     errorLogged = true;
 #else
@@ -429,7 +429,7 @@ namespace UnityRestClient
                     stringContent = webRequest.downloadHandler.text;
                 else
                     error = webRequest.error;
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Get error {id} {stringContent}");
                 else
@@ -475,7 +475,7 @@ namespace UnityRestClient
         public static async Task<Result> Delete(string url, string authorizationToken,
             AuthHeaderSettings authHeaderSettings, Dictionary<string, string> headers)
         {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
             uint id = GetNextDebugId();
             bool errorLogged = false;
             Debug.Log($"Delete request {id} {url}");
@@ -496,7 +496,7 @@ namespace UnityRestClient
                 SetHeaders(webRequest, headers);
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                     Debug.Log(
                         $"Delete {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
 #endif
@@ -515,7 +515,7 @@ namespace UnityRestClient
                 }
                 catch (Exception ex)
                 {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                     Debug.LogError($"Delete error {id} catched {ex}");
                     errorLogged = true;
 #else
@@ -535,7 +535,7 @@ namespace UnityRestClient
                     stringContent = webRequest.downloadHandler.text;
                 else
                     error = webRequest.error;
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Delete error {id} {stringContent}");
                 else
@@ -575,7 +575,7 @@ namespace UnityRestClient
         public static async Task<Result> Post(string url, RequestContent content, string authorizationToken,
             AuthHeaderSettings authHeaderSettings, Dictionary<string, string> headers)
         {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
             uint id = GetNextDebugId();
             bool errorLogged = false;
             Debug.Log($"Post request {id} {url} {content.Data}");
@@ -596,7 +596,7 @@ namespace UnityRestClient
                 SetHeaders(webRequest, headers);
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                     Debug.Log(
                         $"Post {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
 #endif
@@ -617,7 +617,7 @@ namespace UnityRestClient
                 }
                 catch (Exception ex)
                 {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                     Debug.LogError($"Post error {id} catched {ex}");
                     errorLogged = true;
 #else
@@ -637,7 +637,7 @@ namespace UnityRestClient
                     stringContent = webRequest.downloadHandler.text;
                 else
                     error = webRequest.error;
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Post error {id} {stringContent}");
                 else
@@ -677,7 +677,7 @@ namespace UnityRestClient
         public static async Task<Result> Patch(string url, RequestContent content, string authorizationToken,
             AuthHeaderSettings authHeaderSettings, Dictionary<string, string> headers)
         {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
             uint id = GetNextDebugId();
             bool errorLogged = false;
             Debug.Log($"Patch request {id} {url} {content.Data}");
@@ -698,7 +698,7 @@ namespace UnityRestClient
                 SetHeaders(webRequest, headers);
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                     Debug.Log(
                         $"Patch {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
 #endif
@@ -719,7 +719,7 @@ namespace UnityRestClient
                 }
                 catch (Exception ex)
                 {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                     Debug.LogError($"Patch error {id} catched {ex}");
                     errorLogged = true;
 #else
@@ -739,7 +739,7 @@ namespace UnityRestClient
                     stringContent = webRequest.downloadHandler.text;
                 else
                     error = webRequest.error;
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Patch error {id} {stringContent}");
                 else
@@ -779,7 +779,7 @@ namespace UnityRestClient
         public static async Task<Result> Put(string url, RequestContent content, string authorizationToken,
             AuthHeaderSettings authHeaderSettings, Dictionary<string, string> headers)
         {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
             uint id = GetNextDebugId();
             bool errorLogged = false;
             Debug.Log($"Put request {id} {url} {content.Data}");
@@ -800,7 +800,7 @@ namespace UnityRestClient
                 SetHeaders(webRequest, headers);
                 if (!string.IsNullOrEmpty(authorizationToken))
                 {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                     Debug.Log(
                         $"Put {id} with authorization token {authHeaderSettings.Header} {authHeaderSettings.Prefix} {authorizationToken}");
 #endif
@@ -821,7 +821,7 @@ namespace UnityRestClient
                 }
                 catch (Exception ex)
                 {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                     Debug.LogError($"Put error {id} catched {ex}");
                     errorLogged = true;
 #else
@@ -841,7 +841,7 @@ namespace UnityRestClient
                     stringContent = webRequest.downloadHandler.text;
                 else
                     error = webRequest.error;
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG_REST_CLIENT
                 if ((isHttpError || isNetworkError) && !errorLogged)
                     Debug.LogError($"Put error {id} {stringContent}");
                 else
