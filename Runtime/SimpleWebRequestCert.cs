@@ -1,6 +1,6 @@
 ﻿using UnityEngine.Networking;
 
-namespace UnityRestClient
+namespace Insthync.UnityRestClient
 {
     public class SimpleWebRequestCert : CertificateHandler
     {
