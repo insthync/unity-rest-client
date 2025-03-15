@@ -360,6 +360,11 @@ namespace Insthync.UnityRestClient
             return await Get(url + GetQueryString(queries), authorizationToken, authHeaderSettings);
         }
 
+        public static async Task<Result> Get(string url, string authorizationToken)
+        {
+            return await Get(url, authorizationToken, BearerAuthHeaderSettings, null);
+        }
+
         public static async Task<Result> Get(string url, string authorizationToken,
             AuthHeaderSettings authHeaderSettings)
         {
@@ -464,6 +469,11 @@ namespace Insthync.UnityRestClient
             string authorizationToken, AuthHeaderSettings authHeaderSettings)
         {
             return await Delete(url + GetQueryString(queries), authorizationToken, authHeaderSettings);
+        }
+
+        public static async Task<Result> Delete(string url, string authorizationToken)
+        {
+            return await Delete(url, authorizationToken, BearerAuthHeaderSettings, null);
         }
 
         public static async Task<Result> Delete(string url, string authorizationToken,
