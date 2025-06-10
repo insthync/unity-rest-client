@@ -972,6 +972,10 @@ namespace Insthync.UnityRestClient
                     return tempObject.ToString();
                 if (objs.TryGetValue("Message", out tempObject))
                     return tempObject.ToString();
+                if (objs.TryGetValue("response", out tempObject))
+                    return tempObject.ToString();
+                if (objs.TryGetValue("Response", out tempObject))
+                    return tempObject.ToString();
             }
             catch
             {
